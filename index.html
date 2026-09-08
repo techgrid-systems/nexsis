@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Techgrid Systems Enterprise AI Hub</title>
+    <title>Techgrid Systems Enterprise AI</title>
     <link rel="icon" type="image/jpeg" href="https://techgrid-systems.github.io/techgrid-systems-logo/tgs.jpg">
     <link rel="apple-touch-icon" href="https://techgrid-systems.github.io/techgrid-systems-logo/tgs.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -67,7 +67,11 @@
             </div>
 
             <div class="flex items-center gap-3">
-                <div id="system-status-indicator" class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-semibold shadow-sm">
+                <!-- Request Engineer Escalation Button -->
+                <button id="nav-escalate-btn" onclick="requestEngineer()" class="hidden text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shadow-sm">
+                    <span>👨‍💻</span> Request Engineer
+                </button>
+                <div id="system-status-indicator" class="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-semibold shadow-sm">
                     <span id="status-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span id="status-text">Systems Nominal</span>
                 </div>
             </div>
@@ -235,6 +239,9 @@
             userInput.placeholder = "Query infrastructure clusters, documentation, or request support...";
             sendBtn.disabled = false;
             sendBtn.classList.remove('opacity-50');
+            
+            // Reveal the Request Engineer button on the top navbar once initialized
+            document.getElementById('nav-escalate-btn').classList.remove('hidden');
 
             const dynamicGreeting = getTimeBasedGreeting();
             const welcomeMessage = `${dynamicGreeting}, ${visitorData.preferredName}. I am Nexsis, the enterprise automation and intelligence engine for Techgrid Systems. I provide secure guidance across our systems, live status for our core infrastructure, and direct engineering escalation pathways in case of emergencies.`;
@@ -259,7 +266,7 @@
 
             chatWindow.appendChild(msgDiv);
             chatWindow.scrollTop = chatWindow.scrollHeight;
-            chatHistory.push({ sender: 'bot', text: messageText });
+            chatHistory.push({ sender: 'bot', message: messageText, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
         }
 
         function escapeHtml(text) {
@@ -338,7 +345,7 @@
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
             if (sender !== 'system') {
-                chatHistory.push({ sender, text });
+                chatHistory.push({ sender: isUser ? 'client' : 'ai', message: text, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
             }
         }
 
@@ -395,6 +402,38 @@
             }
         }
 
+        function triggerUnknownQueryEscalation() {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex justify-start animate-fade-in mb-4`;
+
+            msgDiv.innerHTML = `
+                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4">
+                    <div class="text-slate-200 leading-relaxed">
+                        I am unable to locate a direct match for your inquiry within our current technical knowledge base or automated response repository. Would you like to connect directly with one of our human systems engineers or support agents for specialized assistance?
+                    </div>
+                    <div class="pt-2 border-t border-slate-700/50 flex items-center gap-3">
+                        <button onclick="handleEngineerChoice('yes')" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-md">Yes</button>
+                        <button onclick="handleEngineerChoice('no')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition shadow-md">No</button>
+                    </div>
+                </div>
+            `;
+
+            chatWindow.appendChild(msgDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            chatHistory.push({ sender: 'bot', message: "I am unable to locate a direct match for your inquiry within our current technical knowledge base or automated response repository. Would you like to connect directly with one of our human systems engineers or support agents for specialized assistance?", time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+        }
+
+        async function handleEngineerChoice(choice) {
+            if (choice === 'yes') {
+                appendChatMessage('user', 'Yes');
+                await requestEngineer();
+            } else {
+                appendChatMessage('user', 'No');
+                appendChatMessage('bot', `Understood, ${visitorData.preferredName}. Please feel free to enter another question or query below whenever you are ready.`);
+                askIfFinished();
+            }
+        }
+
         async function handleUserMessage() {
             if (!isChatActive) return;
             if (!userInput) return;
@@ -431,13 +470,10 @@
                             });
                             break;
                     }
+                    askIfFinished();
                 } else {
-                    appendChatMessage('bot', `Telemetry request logged. For comprehensive infrastructure schematics, please consult our official system sitemap, ${visitorData.preferredName}.`, 'text', { 
-                        url: "https://www.techgrid-systems.org.uk/sitemap", 
-                        text: "Techgrid Sitemap & Documentation Hub" 
-                    });
+                    triggerUnknownQueryEscalation();
                 }
-                askIfFinished();
             }, 850);
         }
 
@@ -480,6 +516,33 @@
             }
         }
 
+        async function requestEngineer() {
+            if (!isChatActive) return;
+
+            try {
+                const res = await fetch('https://chat.techgrid-systems.org.uk/chat-backend.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'create_ticket_with_history',
+                        name: `${visitorData.preferredName} (${visitorData.lastName})`,
+                        company: visitorData.businessName,
+                        messages: chatHistory
+                    })
+                });
+                const data = await res.json();
+                if (data.ticket_id) {
+                    localStorage.setItem('techgrid_chat_ticket_id', data.ticket_id);
+                    window.location.href = `https://chat.techgrid-systems.org.uk/index.php?ticket_id=${encodeURIComponent(data.ticket_id)}`;
+                } else {
+                    window.location.href = `https://chat.techgrid-systems.org.uk/`;
+                }
+            } catch (err) {
+                console.error("Escalation error:", err);
+                window.location.href = `https://chat.techgrid-systems.org.uk/`;
+            }
+        }
+
         function sendChatTranscript() {
             if (!isChatActive) return;
 
@@ -492,7 +555,7 @@
             let transcriptText = `CONVERSATION TRANSCRIPT:\n\n\n`;
             
             chatHistory.forEach(item => {
-                let cleanText = stripHtml(item.text).trim();
+                let cleanText = stripHtml(item.message).trim();
                 if (cleanText) {
                     transcriptText += `[${item.sender.toUpperCase()}]:\n\n${cleanText}\n\n\n`;
                 }
