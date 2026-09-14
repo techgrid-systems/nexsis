@@ -67,10 +67,6 @@
             </div>
 
             <div class="flex items-center gap-3">
-                <!-- Request Engineer Escalation Button -->
-                <button id="nav-escalate-btn" onclick="requestEngineer()" class="hidden text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shadow-sm">
-                    <span>👨‍💻</span> Request Engineer
-                </button>
                 <div id="system-status-indicator" class="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-semibold shadow-sm">
                     <span id="status-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span id="status-text">Systems Nominal</span>
                 </div>
@@ -139,7 +135,7 @@
         let chatWindow, userInput, sendBtn, interactiveArea, chatFooter;
         let isChatActive = false;
         let visitorData = { firstName: '', lastName: '', preferredName: '', email: '', businessName: '' };
-        let onboardingStep = 1; // 1: firstName, 2: lastName, 3: preferredName, 4: email, 5: businessName
+        let onboardingStep = 1;
         let chatHistory = [];
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -200,12 +196,10 @@
             const val = inputField.value.trim();
             if (!val) return;
 
-            // Disable current onboarding form elements
             const inputs = activeForm.querySelectorAll('input, button');
             inputs.forEach(el => el.disabled = true);
             activeForm.classList.add('opacity-75');
 
-            // Log user entry in chat window for clarity with the correct current value
             appendChatMessage('user', val);
 
             if (onboardingStep === 1) {
@@ -249,7 +243,6 @@
             chatWindow.appendChild(msgDiv);
             chatWindow.scrollTop = chatWindow.scrollHeight;
             
-            // Focus new input
             setTimeout(() => {
                 const newInput = msgDiv.querySelector('input');
                 if (newInput) newInput.focus();
@@ -275,9 +268,6 @@
             userInput.placeholder = "Query infrastructure clusters, documentation, or request support...";
             sendBtn.disabled = false;
             sendBtn.classList.remove('opacity-50');
-            
-            // Reveal the Request Engineer button on the top navbar once initialized
-            document.getElementById('nav-escalate-btn').classList.remove('hidden');
 
             const dynamicGreeting = getTimeBasedGreeting();
             const welcomeMessage = `${dynamicGreeting}, ${visitorData.preferredName}. I am Nexsis, the enterprise automation and intelligence engine for Techgrid Systems. I provide secure guidance across our systems, live status for our core infrastructure, and direct engineering escalation pathways in case of emergencies.`;
@@ -295,6 +285,7 @@
                     <div class="pt-2 border-t border-slate-700/50 flex flex-wrap gap-2.5">
                         <button onclick="quickPrompt('status ?')" class="text-xs bg-slate-800/80 hover:bg-blue-600/20 text-blue-300 hover:text-blue-200 px-4 py-2.5 rounded-xl border border-slate-700/80 transition font-medium flex items-center gap-2 shadow-sm">⚡ Live Status & Uptime</button>
                         <button onclick="quickPrompt('contact')" class="text-xs bg-slate-800/80 hover:bg-blue-600/20 text-blue-300 hover:text-blue-200 px-4 py-2.5 rounded-xl border border-slate-700/80 transition font-medium flex items-center gap-2 shadow-sm">📞 Engineering Support</button>
+                        <button onclick="startEngineerEscalationFlow()" class="text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 px-4 py-2.5 rounded-xl border border-amber-500/30 transition font-bold flex items-center gap-2 shadow-sm">👨‍💻 Request Engineer</button>
                     </div>
                 </div>
             `;
@@ -304,9 +295,132 @@
             chatHistory.push({ sender: 'bot', message: messageText, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
         }
 
+        function startEngineerEscalationFlow() {
+            if (!isChatActive) return;
+            appendChatMessage('user', 'Request Engineer');
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex justify-start animate-fade-in mb-4`;
+
+            const currentDate = new Date().toISOString().split('T')[0];
+
+            msgDiv.innerHTML = `
+                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4 w-full">
+                    <div class="text-slate-200 leading-relaxed font-semibold text-blue-300">Please provide the details below so we can route your ticket to an engineer:</div>
+                    
+                    <form onsubmit="handleEscalationDetailsSubmit(event)" class="space-y-3 pt-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">Full Name</label>
+                            <input type="text" id="esc-fullname" required value="${escapeHtml(visitorData.firstName)} ${escapeHtml(visitorData.lastName)}" class="w-full bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">Date</label>
+                            <input type="date" id="esc-date" required value="${currentDate}" class="w-full bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">Subject</label>
+                            <input type="text" id="esc-subject" required placeholder="Brief summary of the request..." class="w-full bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">What is the issue?</label>
+                            <textarea id="esc-issue" required rows="3" placeholder="Describe the technical issue in detail..." class="w-full bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-lg flex items-center justify-center gap-2">
+                            <span>Continue</span> &#10140;
+                        </button>
+                    </form>
+                </div>
+            `;
+
+            chatWindow.appendChild(msgDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function handleEscalationDetailsSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+
+            const fullName = form.querySelector('#esc-fullname').value.trim();
+            const dateVal = form.querySelector('#esc-date').value.trim();
+            const subjectVal = form.querySelector('#esc-subject').value.trim();
+            const issueVal = form.querySelector('#esc-issue').value.trim();
+
+            form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
+            form.classList.add('opacity-75');
+
+            appendChatMessage('user', `Full Name: ${fullName}\nDate: ${dateVal}\nSubject: ${subjectVal}\nIssue: ${issueVal}`);
+
+            window.tempEscalationData = { fullName, dateVal, subjectVal, issueVal };
+
+            askTransferConfirmation();
+        }
+
+        function askTransferConfirmation() {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex justify-start animate-fade-in mb-4`;
+
+            msgDiv.innerHTML = `
+                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4">
+                    <div class="text-slate-200 leading-relaxed font-semibold text-blue-300">
+                        Do you want to continue to be transferred to an engineer?
+                    </div>
+                    <div class="flex items-center gap-3 pt-2">
+                        <button onclick="handleTransferDecision('yes')" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-md">Yes</button>
+                        <button onclick="handleTransferDecision('no')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition shadow-md">No</button>
+                    </div>
+                </div>
+            `;
+
+            chatWindow.appendChild(msgDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function handleTransferDecision(choice) {
+            if (choice === 'yes') {
+                appendChatMessage('user', 'Yes');
+                appendChatMessage('bot', 'Preparing your secure transfer to the engineering queue...');
+                
+                try {
+                    const escData = window.tempEscalationData || {};
+                    const payload = {
+                        action: 'create_ticket_with_history',
+                        name: escData.fullName || visitorData.preferredName,
+                        email: visitorData.email,
+                        company: visitorData.businessName,
+                        subject: escData.subjectVal || 'Support Escalation',
+                        issue: escData.issueVal || '',
+                        messages: chatHistory
+                    };
+
+                    const response = await fetch('https://chat.techgrid-systems.org.uk/chat-backend.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+
+                    if (result.status === 'success' && result.queue_id) {
+                        window.location.href = `https://chat.techgrid-systems.org.uk/transfer-queue.php?queue_id=${result.queue_id}`;
+                    } else {
+                        alert('Failed to start support session: ' + (result.message || 'Unknown error'));
+                        window.location.href = `https://chat.techgrid-systems.org.uk/transfer-queue.php`;
+                    }
+                } catch (err) {
+                    console.error('Escalation error:', err);
+                    window.location.href = `https://chat.techgrid-systems.org.uk/transfer-queue.php`;
+                }
+
+            } else {
+                appendChatMessage('user', 'No');
+                appendChatMessage('bot', `Is there something else I can help you with, ${visitorData.preferredName}?`);
+                askIfFinished();
+            }
+        }
+
         function escapeHtml(text) {
+            if (!text) return '';
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-            return text.replace(/[&<>"']/g, m => map[m]);
+            return String(text).replace(/[&<>"']/g, m => map[m]);
         }
 
         async function checkLiveTelemetryStatus() {
@@ -321,7 +435,6 @@
                 if (!response.ok) throw new Error('Network response was not ok');
                 const textData = await response.text();
                 
-                // Parse response if JSON or fallback to live status
                 let hasDownNodes = false;
                 try {
                     const data = JSON.parse(textData);
@@ -371,7 +484,7 @@
                 `;
             } else {
                 innerContent = `
-                    <div class="text-slate-200 leading-relaxed">${text}</div>
+                    <div class="text-slate-200 leading-relaxed whitespace-pre-wrap">${text}</div>
                     ${linkObj ? `<div class="mt-4 pt-3 border-t border-slate-700/50"><a href="${linkObj.url}" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 transition shadow-sm">🔗 ${linkObj.text} &rarr;</a></div>` : ''}
                 `;
             }
@@ -438,7 +551,7 @@
             interactiveArea.innerHTML = `
                 <div class="max-w-xl mx-auto glass-card p-4 rounded-2xl border border-slate-700/60 flex items-center justify-between gap-3 animate-fade-in shadow-xl">
                     <div class="text-xs font-medium text-slate-300 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span> Do you need anything else, ${visitorData.preferredName}?
+                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span> Is there something else I can help you with, ${visitorData.preferredName}?
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="handleAnythingElse('yes')" class="px-3.5 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 text-xs font-bold border border-blue-500/30 transition">Yes</button>
@@ -469,29 +582,17 @@
             msgDiv.innerHTML = `
                 <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4">
                     <div class="text-slate-200 leading-relaxed">
-                        Regrettably, we were unable to locate a direct match for your specific inquiry within our core knowledge base. To ensure you receive prompt and comprehensive assistance from our specialized technical personnel, would you like to speak directly with an accredited engineer or support agent?
+                        Regrettably, we were unable to locate a direct match for your specific inquiry within our core knowledge base. Would you like to request an engineer or ask something else?
                     </div>
                     <div class="pt-2 border-t border-slate-700/50 flex items-center gap-3">
-                        <button onclick="handleEngineerChoice('yes')" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-md">Yes</button>
-                        <button onclick="handleEngineerChoice('no')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition shadow-md">No</button>
+                        <button onclick="startEngineerEscalationFlow()" class="px-5 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-xs font-bold border border-amber-500/30 transition shadow-md">Request Engineer</button>
+                        <button onclick="askIfFinished()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition shadow-md">Ask Something Else</button>
                     </div>
                 </div>
             `;
 
             chatWindow.appendChild(msgDiv);
             chatWindow.scrollTop = chatWindow.scrollHeight;
-            chatHistory.push({ sender: 'bot', message: "Regrettably, we were unable to locate a direct match for your specific inquiry within our core knowledge base. To ensure you receive prompt and comprehensive assistance from our specialized technical personnel, would you like to speak directly with an accredited engineer or support agent?", time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-        }
-
-        async function handleEngineerChoice(choice) {
-            if (choice === 'yes') {
-                appendChatMessage('user', 'Yes');
-                await requestEngineer();
-            } else {
-                appendChatMessage('user', 'No');
-                appendChatMessage('bot', `Understood, ${visitorData.preferredName}. Please feel free to enter another question or query below whenever you are ready.`);
-                askIfFinished();
-            }
         }
 
         async function handleUserMessage() {
@@ -547,20 +648,6 @@
                     const telemetry = JSON.parse(textData);
                     nodeList = Array.isArray(telemetry) ? telemetry : (telemetry.results || telemetry.nodes || telemetry.services || []);
                 } catch(e) {
-                    nodeList = [
-                        { name: 'Main Website', domain: 'www.techgrid-systems.org.uk', status: 'up', latency: '3ms' },
-                        { name: 'CPanel Hosting Gateway', domain: 'tgs-cpanel.techgrid-systems.org.uk', status: 'up', latency: '6ms' },
-                        { name: 'Global Namespace Root', domain: 'techgrid-systems.org.uk', status: 'up', latency: '107ms' },
-                        { name: 'Status Telemetry Core', domain: 'status.techgrid-systems.org.uk', status: 'up', latency: '3ms' },
-                        { name: 'AI Workspace Engine', domain: 'nexsis.techgrid-systems.org.uk', status: 'up', latency: '30ms' },
-                        { name: 'SharePoint Document Vault', domain: 'sharepoint.techgrid-systems.org.uk', status: 'up', latency: '3ms' },
-                        { name: 'Staff Training Platform', domain: 'training.techgrid-systems.org.uk', status: 'up', latency: '24ms' },
-                        { name: 'Core Infrastructure Node - London', domain: 'lon01.techgrid-systems.org.uk', status: 'up', latency: '27ms' },
-                        { name: 'Secure File Transfer Gateway (FTP)', domain: 'ftp.techgrid-systems.org.uk', status: 'up', latency: '3ms' }
-                    ];
-                }
-                
-                if (!Array.isArray(nodeList) || nodeList.length === 0) {
                     nodeList = [
                         { name: 'Main Website', domain: 'www.techgrid-systems.org.uk', status: 'up', latency: '3ms' },
                         { name: 'CPanel Hosting Gateway', domain: 'tgs-cpanel.techgrid-systems.org.uk', status: 'up', latency: '6ms' },
@@ -652,33 +739,6 @@
             }
         }
 
-        async function requestEngineer() {
-            if (!isChatActive) return;
-
-            try {
-                const res = await fetch('https://chat.techgrid-systems.org.uk/chat-backend.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'create_ticket_with_history',
-                        name: `${visitorData.preferredName} (${visitorData.lastName})`,
-                        company: visitorData.businessName,
-                        messages: chatHistory
-                    })
-                });
-                const data = await res.json();
-                if (data.ticket_id) {
-                    localStorage.setItem('techgrid_chat_ticket_id', data.ticket_id);
-                    window.location.href = `https://chat.techgrid-systems.org.uk/index.php?ticket_id=${encodeURIComponent(data.ticket_id)}`;
-                } else {
-                    window.location.href = `https://chat.techgrid-systems.org.uk/`;
-                }
-            } catch (err) {
-                console.error("Escalation error:", err);
-                window.location.href = `https://chat.techgrid-systems.org.uk/`;
-            }
-        }
-
         function sendChatTranscript() {
             if (!isChatActive) return;
 
@@ -690,12 +750,12 @@
 
             let transcriptText = `CONVERSATION TRANSCRIPT:\n\n\n`;
             
-            chatHistory.forEach(item => {
+            chatHistory.items.forEach ? chatHistory.forEach(item => {
                 let cleanText = stripHtml(item.message).replace(/\s+/g, ' ').trim();
                 if (cleanText) {
                     transcriptText += `[${item.sender.toUpperCase()}]:\n\n${cleanText}\n\n\n`;
                 }
-            });
+            }) : null;
 
             const formData = {
                 "First Name": visitorData.firstName,
