@@ -375,21 +375,25 @@
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
 
-        async function handleTransferDecision(choice) {
+async function handleTransferDecision(choice) {
             if (choice === 'yes') {
                 appendChatMessage('user', 'Yes');
                 appendChatMessage('bot', 'Preparing your secure transfer to the engineering queue...');
                 
                 try {
                     const escData = window.tempEscalationData || {};
+                    
+                    // Format the issue string to include only the requested details
+                    const formattedIssue = `Full Name: ${escData.fullName || visitorData.preferredName}\nDate: ${escData.dateVal || new Date().toISOString().split('T')[0]}\nSubject: ${escData.subjectVal || 'Support Escalation'}\nWhat is the issue?: ${escData.issueVal || ''}`;
+
                     const payload = {
                         action: 'create_ticket_with_history',
                         name: escData.fullName || visitorData.preferredName,
                         email: visitorData.email,
                         company: visitorData.businessName,
                         subject: escData.subjectVal || 'Support Escalation',
-                        issue: escData.issueVal || '',
-                        messages: chatHistory
+                        issue: formattedIssue,
+                        messages: [] // Excludes the full bot conversation history
                     };
 
                     const response = await fetch('https://chat.techgrid-systems.org.uk/chat-backend.php', {
