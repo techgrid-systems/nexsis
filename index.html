@@ -12,15 +12,17 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
         .glass-panel {
-            background: rgba(15, 23, 42, 0.90);
+            background: #e5e7eb;
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(51, 65, 85, 0.5);
+            border: 1px solid #d1d5db;
+            color: #000000;
         }
         
         .glass-card {
-            background: rgba(30, 41, 59, 0.65);
+            background: #e5e7eb;
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(71, 85, 105, 0.4);
+            border: 1px solid #d1d5db;
+            color: #000000;
         }
         
         @keyframes fadeIn {
@@ -33,7 +35,7 @@
             animation: blink 1.4s infinite both;
             height: 6px;
             width: 6px;
-            background-color: #60a5fa;
+            background-color: #2563eb;
             display: inline-block;
             border-radius: 50%;
             margin: 0 2px;
@@ -46,30 +48,34 @@
         }
         
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 9999px; }
         ::-webkit-scrollbar-track { background: transparent; }
     </style>
 </head>
-<body class="bg-[#030712] text-slate-100 h-full flex flex-col overflow-hidden selection:bg-blue-600 selection:text-white">
+<body class="bg-white text-black h-full flex flex-col overflow-hidden selection:bg-blue-600 selection:text-white">
 
-    
+    <main class="flex-1 overflow-hidden relative flex flex-col max-w-7xl mx-auto w-full bg-white text-black">
 
-    <main class="flex-1 overflow-hidden relative flex flex-col max-w-7xl mx-auto w-full">
+        <div id="view-chat" class="flex-1 flex flex-col h-full overflow-hidden bg-white text-black">
+            <div id="chat-window" class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-6 bg-white text-black">
+                <!-- Notice Above First Box -->
+                <div class="max-w-2xl bg-[#e5e7eb] text-black border border-gray-300 rounded-2xl p-4 sm:p-5 text-xs sm:text-sm leading-relaxed animate-fade-in">
+                    <p>By accepting, you acknowledge that you are interacting with an AI-powered virtual assistant, not a human agent, and that Techgrid Systems AI Chat Policy applies. This assistant uses AI to help you explore Techgrid Systems.</p>
+                    <p class="mt-2">If you require human support, you will need to enter your details in order to select the request engineer button to fill in a form.</p>
+                </div>
 
-        <div id="view-chat" class="flex-1 flex flex-col h-full overflow-hidden">
-            <div id="chat-window" class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-6">
                 <!-- Initial Bot Greeting & First Step Prompt -->
                 <div class="flex justify-start animate-fade-in">
-                    <div class="max-w-2xl glass-card text-slate-200 p-6 sm:p-7 rounded-3xl rounded-tl-none shadow-2xl text-sm sm:text-base leading-relaxed border-slate-700/60 w-full space-y-4">
-                        <div class="flex items-center justify-between pb-3 border-b border-slate-700/50">
-                            <div class="flex items-center gap-2 text-blue-400 font-bold text-xs uppercase tracking-wider">
-                                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Nexsis 2.0 Initialization
+                    <div class="max-w-2xl glass-card text-black p-6 sm:p-7 rounded-3xl rounded-tl-none shadow-2xl text-sm sm:text-base leading-relaxed border-gray-300 w-full space-y-4">
+                        <div class="flex items-center justify-between pb-3 border-b border-gray-300">
+                            <div class="flex items-center gap-2 text-black font-bold text-xs uppercase tracking-wider">
+                                <span class="w-2 h-2 rounded-full bg-green-600 animate-pulse"></span> Nexsis 2.0 Initialization
                             </div>
                         </div>
-                        <p class="font-semibold text-blue-300">Welcome to Techgrid Systems Enterprise AI Hub. To initialize a secure session, please enter your first name below.</p>
+                        <p class="font-semibold text-black">Welcome to Techgrid Systems Enterprise AI Hub. To initialize a secure session, please enter your first name below.</p>
                         
                         <form id="onboard-form" onsubmit="handleOnboardingSubmit(event)" class="pt-2 flex gap-2">
-                            <input type="text" id="onboard-input" required placeholder="Enter your first name..." class="flex-1 bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="onboard-input" required placeholder="Enter your first name..." class="flex-1 bg-[#e5e7eb] border border-gray-300 rounded-xl px-4 py-3 text-xs sm:text-sm text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-lg flex items-center justify-center gap-2">
                                 <span>Continue</span> &#10140;
                             </button>
@@ -78,12 +84,12 @@
                 </div>
             </div>
 
-            <div id="interactive-area" class="px-4 py-2 flex-shrink-0"></div>
+            <div id="interactive-area" class="px-4 py-2 flex-shrink-0 bg-white text-black"></div>
 
-            <footer id="chat-footer" class="p-4 sm:p-6 bg-[#0b0f19]/80 border-t border-slate-800/80 backdrop-blur-xl flex-shrink-0 opacity-50 pointer-events-none transition-opacity">
+            <footer id="chat-footer" class="p-4 sm:p-6 bg-white border-t border-gray-300 flex-shrink-0 opacity-50 pointer-events-none transition-opacity">
                 <div class="max-w-4xl mx-auto flex gap-3.5 items-center">
                     <input type="text" id="user-input" disabled placeholder="Please complete the onboarding steps above to continue..." 
-                        class="flex-1 bg-slate-900/90 border border-slate-700/80 rounded-2xl px-5 py-4 text-sm sm:text-base text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-inner">
+                        class="flex-1 bg-[#e5e7eb] border border-gray-300 rounded-2xl px-5 py-4 text-sm sm:text-base text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-inner">
                     <button id="send-btn" disabled class="bg-blue-600 hover:bg-blue-500 text-white p-4 rounded-2xl transition shadow-xl shadow-blue-600/30 flex items-center justify-center active:scale-95 flex-shrink-0 opacity-50">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -96,13 +102,13 @@
     </main>
 
     <!-- Success Modal -->
-    <div id="success-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
-        <div class="glass-panel rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl space-y-4 border border-slate-700">
-            <div class="w-14 h-14 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-xl border border-emerald-500/20">
+    <div id="success-modal" class="fixed inset-0 bg-black/50 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+        <div class="glass-panel rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl space-y-4 border border-gray-300 text-black">
+            <div class="w-14 h-14 bg-emerald-500/10 text-emerald-700 rounded-full flex items-center justify-center mx-auto text-xl border border-emerald-500/20">
                 ✓
             </div>
-            <h3 class="text-lg font-bold text-slate-100">Details recorded!</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">Your details have been passed onto our service desk for further references so we can reach out to you.</p>
+            <h3 class="text-lg font-bold text-black">Details recorded!</h3>
+            <p class="text-xs text-black leading-relaxed">Your details have been passed onto our service desk for further references so we can reach out to you.</p>
             <button onclick="location.reload()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl text-xs transition-all shadow">
                 Start New Session
             </button>
@@ -110,8 +116,30 @@
     </div>
 
     <script>
-        let TECHGRID_ACTIONS = [];
-        let TECHGRID_RESPONSES = {};
+        let TECHGRID_ACTIONS = [
+            {
+                keywords: ["status", "uptime", "live status", "telemetry", "health"],
+                handler: "fetch_live_status",
+                response_id: "status_check"
+            },
+            {
+                keywords: ["contact", "engineering support", "support", "phone", "email", "whatsapp"],
+                handler: "render_contact_card",
+                response_id: "engineering_support"
+            }
+        ];
+        let TECHGRID_RESPONSES = {
+            status_check: {
+                response: "Fetching live infrastructure status...",
+                url: "https://status.techgrid-systems.org.uk",
+                linkText: "Open Full Status Portal"
+            },
+            engineering_support: {
+                response: "Reach out to our engineering team directly using any of the channels below:",
+                url: "mailto:support@techgrid-systems.org.uk",
+                linkText: "Contact Engineering"
+            }
+        };
         let chatWindow, userInput, sendBtn, interactiveArea, chatFooter;
         let isChatActive = false;
         let visitorData = { firstName: '', lastName: '', preferredName: '', email: '', businessName: '' };
@@ -161,8 +189,12 @@
                 if (!actionsRes.ok || !responsesRes.ok) throw new Error('Failed to load configuration.');
                 const actionsData = await actionsRes.json();
                 const responsesData = await responsesRes.json();
-                TECHGRID_ACTIONS = actionsData.actions || [];
-                TECHGRID_RESPONSES = responsesData.responses || {};
+                if (Array.isArray(actionsData.actions) && actionsData.actions.length > 0) {
+                    TECHGRID_ACTIONS = actionsData.actions;
+                }
+                if (responsesData.responses && Object.keys(responsesData.responses).length > 0) {
+                    TECHGRID_RESPONSES = responsesData.responses;
+                }
             } catch (err) {
                 console.warn("Could not load external JSON files.", err);
             }
@@ -209,10 +241,10 @@
             msgDiv.className = `flex justify-start animate-fade-in mb-4`;
 
             msgDiv.innerHTML = `
-                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4 w-full">
-                    <div class="text-slate-200 leading-relaxed font-semibold text-blue-300">${promptText}</div>
+                <div class="max-w-2xl glass-card text-black rounded-3xl rounded-tl-none shadow-2xl border-gray-300 p-6 sm:p-7 text-sm sm:text-base space-y-4 w-full">
+                    <div class="text-black leading-relaxed font-semibold">${promptText}</div>
                     <form onsubmit="handleOnboardingSubmit(event)" class="pt-2 flex gap-2">
-                        <input type="${inputType}" required placeholder="${placeholderText}" class="flex-1 bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="${inputType}" required placeholder="${placeholderText}" class="flex-1 bg-[#e5e7eb] border border-gray-300 rounded-xl px-4 py-3 text-xs sm:text-sm text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-lg flex items-center justify-center gap-2">
                             <span>Continue</span> &#10140;
                         </button>
@@ -233,8 +265,8 @@
             const successDiv = document.createElement('div');
             successDiv.className = `flex justify-start animate-fade-in mb-4`;
             successDiv.innerHTML = `
-                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-3 w-full">
-                    <div class="bg-emerald-950/40 border border-emerald-500/30 p-3.5 rounded-xl text-emerald-300 text-xs flex items-center gap-2 font-medium">
+                <div class="max-w-2xl glass-card text-black rounded-3xl rounded-tl-none shadow-2xl border-gray-300 p-6 sm:p-7 text-sm sm:text-base space-y-3 w-full">
+                    <div class="bg-[#e5e7eb] border border-gray-300 p-3.5 rounded-xl text-black text-xs flex items-center gap-2 font-medium">
                         <span>✓</span> Verified session initialized for <b>${escapeHtml(visitorData.preferredName)}</b> (${escapeHtml(visitorData.businessName)}). You are now connected to Nexsis AI.
                     </div>
                 </div>
@@ -260,12 +292,12 @@
             msgDiv.className = `flex justify-start animate-fade-in mb-4`;
 
             msgDiv.innerHTML = `
-                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4">
-                    <div class="text-slate-200 leading-relaxed">${messageText}</div>
-                    <div class="pt-2 border-t border-slate-700/50 flex flex-wrap gap-2.5">
-                        <button onclick="quickPrompt('status ?')" class="text-xs bg-slate-800/80 hover:bg-blue-600/20 text-blue-300 hover:text-blue-200 px-4 py-2.5 rounded-xl border border-slate-700/80 transition font-medium flex items-center gap-2 shadow-sm">⚡ Live Status & Uptime</button>
-                        <button onclick="quickPrompt('contact')" class="text-xs bg-slate-800/80 hover:bg-blue-600/20 text-blue-300 hover:text-blue-200 px-4 py-2.5 rounded-xl border border-slate-700/80 transition font-medium flex items-center gap-2 shadow-sm">📞 Engineering Support</button>
-                        <button onclick="startEngineerEscalationFlow()" class="text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 px-4 py-2.5 rounded-xl border border-amber-500/30 transition font-bold flex items-center gap-2 shadow-sm">👨‍💻 Request Engineer</button>
+                <div class="max-w-2xl glass-card text-black rounded-3xl rounded-tl-none shadow-2xl border-gray-300 p-6 sm:p-7 text-sm sm:text-base space-y-4">
+                    <div class="text-black leading-relaxed">${messageText}</div>
+                    <div class="pt-2 border-t border-gray-300 flex flex-wrap gap-2.5">
+                        <button onclick="quickPrompt('status ?')" class="text-xs bg-[#e5e7eb] hover:bg-gray-300 text-black px-4 py-2.5 rounded-xl border border-gray-300 transition font-medium flex items-center gap-2 shadow-sm">⚡ Live Status & Uptime</button>
+                        <button onclick="quickPrompt('contact')" class="text-xs bg-[#e5e7eb] hover:bg-gray-300 text-black px-4 py-2.5 rounded-xl border border-gray-300 transition font-medium flex items-center gap-2 shadow-sm">📞 Engineering Support</button>
+                        <button onclick="startEngineerEscalationFlow()" class="text-xs bg-[#e5e7eb] hover:bg-gray-300 text-black px-4 py-2.5 rounded-xl border border-gray-300 transition font-bold flex items-center gap-2 shadow-sm">👨‍💻 Request Engineer</button>
                     </div>
                 </div>
             `;
@@ -285,25 +317,25 @@
             const currentDate = new Date().toISOString().split('T')[0];
 
             msgDiv.innerHTML = `
-                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4 w-full">
-                    <div class="text-slate-200 leading-relaxed font-semibold text-blue-300">Please provide the details below so we can route your ticket to an engineer:</div>
+                <div class="max-w-2xl glass-card text-black rounded-3xl rounded-tl-none shadow-2xl border-gray-300 p-6 sm:p-7 text-sm sm:text-base space-y-4 w-full">
+                    <div class="text-black leading-relaxed font-semibold">Please provide the details below so we can route your ticket to an engineer:</div>
                     
                     <form onsubmit="handleEscalationDetailsSubmit(event)" class="space-y-3 pt-2">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">Full Name</label>
-                            <input type="text" id="esc-fullname" required value="${escapeHtml(visitorData.firstName)} ${escapeHtml(visitorData.lastName)}" class="w-full bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-black mb-1">Full Name</label>
+                            <input type="text" id="esc-fullname" required value="${escapeHtml(visitorData.firstName)} ${escapeHtml(visitorData.lastName)}" class="w-full bg-[#e5e7eb] border border-gray-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">Date</label>
-                            <input type="date" id="esc-date" required value="${currentDate}" class="w-full bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-black mb-1">Date</label>
+                            <input type="date" id="esc-date" required value="${currentDate}" class="w-full bg-[#e5e7eb] border border-gray-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">Subject</label>
-                            <input type="text" id="esc-subject" required placeholder="Brief summary of the request..." class="w-full bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-black mb-1">Subject</label>
+                            <input type="text" id="esc-subject" required placeholder="Brief summary of the request..." class="w-full bg-[#e5e7eb] border border-gray-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">What is the issue?</label>
-                            <textarea id="esc-issue" required rows="3" placeholder="Describe the technical issue in detail..." class="w-full bg-[#030712] border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                            <label class="block text-xs font-semibold text-black mb-1">What is the issue?</label>
+                            <textarea id="esc-issue" required rows="3" placeholder="Describe the technical issue in detail..." class="w-full bg-[#e5e7eb] border border-gray-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                         </div>
                         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-lg flex items-center justify-center gap-2">
                             <span>Continue</span> &#10140;
@@ -328,7 +360,10 @@
             form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
             form.classList.add('opacity-75');
 
-            appendChatMessage('user', `Full Name: ${fullName}\nDate: ${dateVal}\nSubject: ${subjectVal}\nIssue: ${issueVal}`);
+            appendChatMessage('user', `Full Name: ${fullName}
+Date: ${dateVal}
+Subject: ${subjectVal}
+Issue: ${issueVal}`);
 
             window.tempEscalationData = { fullName, dateVal, subjectVal, issueVal };
 
@@ -340,13 +375,13 @@
             msgDiv.className = `flex justify-start animate-fade-in mb-4`;
 
             msgDiv.innerHTML = `
-                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4">
-                    <div class="text-slate-200 leading-relaxed font-semibold text-blue-300">
+                <div class="max-w-2xl glass-card text-black rounded-3xl rounded-tl-none shadow-2xl border-gray-300 p-6 sm:p-7 text-sm sm:text-base space-y-4">
+                    <div class="text-black leading-relaxed font-semibold">
                         Do you want to continue to be transferred to an engineer?
                     </div>
                     <div class="flex items-center gap-3 pt-2">
                         <button onclick="handleTransferDecision('yes')" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-md">Yes</button>
-                        <button onclick="handleTransferDecision('no')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition shadow-md">No</button>
+                        <button onclick="handleTransferDecision('no')" class="px-5 py-2.5 rounded-xl bg-[#e5e7eb] hover:bg-gray-300 text-black text-xs font-bold border border-gray-300 transition shadow-md">No</button>
                     </div>
                 </div>
             `;
@@ -355,7 +390,7 @@
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
 
-async function handleTransferDecision(choice) {
+        async function handleTransferDecision(choice) {
             if (choice === 'yes') {
                 appendChatMessage('user', 'Yes');
                 appendChatMessage('bot', 'Preparing your secure transfer to the engineering queue...');
@@ -364,7 +399,10 @@ async function handleTransferDecision(choice) {
                     const escData = window.tempEscalationData || {};
                     
                     // Format the issue string to include only the requested details
-                    const formattedIssue = `Full Name: ${escData.fullName || visitorData.preferredName}\nDate: ${escData.dateVal || new Date().toISOString().split('T')[0]}\nSubject: ${escData.subjectVal || 'Support Escalation'}\nWhat is the issue?: ${escData.issueVal || ''}`;
+                    const formattedIssue = `Full Name: ${escData.fullName || visitorData.preferredName}
+Date: ${escData.dateVal || new Date().toISOString().split('T')[0]}
+Subject: ${escData.subjectVal || 'Support Escalation'}
+What is the issue?: ${escData.issueVal || ''}`;
 
                     const payload = {
                         action: 'create_ticket_with_history',
@@ -429,17 +467,17 @@ async function handleTransferDecision(choice) {
                 }
 
                 if (hasDownNodes) {
-                    statusIndicator.className = "flex items-center gap-2 px-3.5 py-2 rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 text-xs font-semibold shadow-sm";
-                    statusDot.className = "w-2 h-2 rounded-full bg-red-500 animate-pulse";
+                    statusIndicator.className = "flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#e5e7eb] border border-gray-300 text-black text-xs font-semibold shadow-sm";
+                    statusDot.className = "w-2 h-2 rounded-full bg-red-600 animate-pulse";
                     statusText.innerText = "Degraded (Node Offline)";
                 } else {
-                    statusIndicator.className = "flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-semibold shadow-sm";
-                    statusDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+                    statusIndicator.className = "flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#e5e7eb] border border-gray-300 text-black text-xs font-semibold shadow-sm";
+                    statusDot.className = "w-2 h-2 rounded-full bg-emerald-600 animate-pulse";
                     statusText.innerText = "Systems Nominal";
                 }
             } catch (err) {
-                statusIndicator.className = "flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-semibold shadow-sm";
-                statusDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+                statusIndicator.className = "flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#e5e7eb] border border-gray-300 text-black text-xs font-semibold shadow-sm";
+                statusDot.className = "w-2 h-2 rounded-full bg-emerald-600 animate-pulse";
                 statusText.innerText = "Systems Nominal";
             }
         }
@@ -452,29 +490,29 @@ async function handleTransferDecision(choice) {
             let innerContent = '';
             if (type === 'contact') {
                 innerContent = `
-                    <div class="font-bold text-blue-400 mb-2">📞 Direct Engineering & Escalation Channels</div>
-                    <p class="text-slate-300 mb-4">${text}</p>
+                    <div class="font-bold text-black mb-2">📞 Direct Engineering & Escalation Channels</div>
+                    <p class="text-black mb-4">${text}</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <a href="mailto:support@techgrid-systems.org.uk" target="_blank" class="p-3.5 rounded-xl bg-slate-800/90 hover:bg-blue-600/20 border border-slate-700/80 transition flex items-center gap-3 text-sm font-medium text-slate-200">
-                            <span class="text-lg">✉️</span> <div><div class="text-[10px] text-slate-400 uppercase font-bold">Direct Email</div>support@techgrid-systems.org.uk</div>
+                        <a href="mailto:support@techgrid-systems.org.uk" target="_blank" class="p-3.5 rounded-xl bg-[#e5e7eb] hover:bg-gray-300 border border-gray-300 transition flex items-center gap-3 text-sm font-medium text-black">
+                            <span class="text-lg">✉️</span> <div><div class="text-[10px] text-black uppercase font-bold">Direct Email</div>support@techgrid-systems.org.uk</div>
                         </a>
-                        <a href="tel:+442079460912" target="_blank" class="p-3.5 rounded-xl bg-slate-800/90 hover:bg-blue-600/20 border border-slate-700/80 transition flex items-center gap-3 text-sm font-medium text-slate-200">
-                            <span class="text-lg">📞</span> <div><div class="text-[10px] text-slate-400 uppercase font-bold">Telephone</div>+44 20 7946 0912</div>
+                        <a href="tel:+442079460912" target="_blank" class="p-3.5 rounded-xl bg-[#e5e7eb] hover:bg-gray-300 border border-gray-300 transition flex items-center gap-3 text-sm font-medium text-black">
+                            <span class="text-lg">📞</span> <div><div class="text-[10px] text-black uppercase font-bold">Telephone</div>+44 20 7946 0912</div>
                         </a>
-                        <a href="https://wa.me/447700900077" target="_blank" class="p-3.5 rounded-xl bg-slate-800/90 hover:bg-emerald-600/20 border border-slate-700/80 transition flex items-center gap-3 text-sm font-medium text-slate-200 sm:col-span-2">
-                            <span class="text-lg">💬</span> <div><div class="text-[10px] text-slate-400 uppercase font-bold">Secure WhatsApp Escalation</div>+44 7700 900077 (Instant Response)</div>
+                        <a href="https://wa.me/447700900077" target="_blank" class="p-3.5 rounded-xl bg-[#e5e7eb] hover:bg-gray-300 border border-gray-300 transition flex items-center gap-3 text-sm font-medium text-black sm:col-span-2">
+                            <span class="text-lg">💬</span> <div><div class="text-[10px] text-black uppercase font-bold">Secure WhatsApp Escalation</div>+44 7700 900077 (Instant Response)</div>
                         </a>
                     </div>
                 `;
             } else {
                 innerContent = `
-                    <div class="text-slate-200 leading-relaxed whitespace-pre-wrap">${text}</div>
-                    ${linkObj ? `<div class="mt-4 pt-3 border-t border-slate-700/50"><a href="${linkObj.url}" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 transition shadow-sm">🔗 ${linkObj.text} &rarr;</a></div>` : ''}
+                    <div class="${isUser ? 'text-white' : 'text-black'} leading-relaxed whitespace-pre-wrap">${text}</div>
+                    ${linkObj ? `<div class="mt-4 pt-3 border-t ${isUser ? 'border-blue-400/50' : 'border-gray-300'}"><a href="${linkObj.url}" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl ${isUser ? 'bg-blue-700 text-white border border-blue-400' : 'bg-[#e5e7eb] hover:bg-gray-300 text-black border border-gray-300'} transition shadow-sm">🔗 ${linkObj.text} &rarr;</a></div>` : ''}
                 `;
             }
 
             msgDiv.innerHTML = `
-                <div class="max-w-2xl ${isUser ? 'bg-blue-600 text-white rounded-3xl rounded-tr-none shadow-xl shadow-blue-600/10' : 'glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60'} p-6 sm:p-7 text-sm sm:text-base">
+                <div class="max-w-2xl ${isUser ? 'bg-blue-600 text-white rounded-3xl rounded-tr-none shadow-xl shadow-blue-600/10' : 'glass-card text-black rounded-3xl rounded-tl-none shadow-2xl border-gray-300'} p-6 sm:p-7 text-sm sm:text-base">
                     ${innerContent}
                 </div>
             `;
@@ -493,7 +531,7 @@ async function handleTransferDecision(choice) {
             msgDiv.className = `flex justify-${isUser ? 'end' : 'start'} animate-fade-in mb-4`;
 
             msgDiv.innerHTML = `
-                <div class="max-w-2xl ${isUser ? 'bg-blue-600 text-white rounded-3xl rounded-tr-none shadow-xl shadow-blue-600/10' : 'glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60'} p-6 sm:p-7 text-sm sm:text-base">
+                <div class="max-w-2xl ${isUser ? 'bg-blue-600 text-white rounded-3xl rounded-tr-none shadow-xl shadow-blue-600/10' : 'glass-card text-black rounded-3xl rounded-tl-none shadow-2xl border-gray-300'} p-6 sm:p-7 text-sm sm:text-base">
                     ${htmlContent}
                 </div>
             `;
@@ -510,8 +548,8 @@ async function handleTransferDecision(choice) {
             const div = document.createElement('div');
             div.className = 'flex justify-start animate-fade-in mb-4';
             div.innerHTML = `
-                <div class="glass-card p-4 rounded-3xl rounded-tl-none flex items-center gap-2">
-                    <span class="text-xs text-slate-400 font-medium">Nexsis is analyzing infrastructure records</span>
+                <div class="glass-card text-black p-4 rounded-3xl rounded-tl-none flex items-center gap-2 border-gray-300">
+                    <span class="text-xs text-black font-medium">Nexsis is analyzing infrastructure records</span>
                     <div class="typing-dots flex items-center">
                         <span></span><span></span><span></span>
                     </div>
@@ -533,13 +571,13 @@ async function handleTransferDecision(choice) {
         function askIfFinished() {
             if (!interactiveArea) return;
             interactiveArea.innerHTML = `
-                <div class="max-w-xl mx-auto glass-card p-4 rounded-2xl border border-slate-700/60 flex items-center justify-between gap-3 animate-fade-in shadow-xl">
-                    <div class="text-xs font-medium text-slate-300 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span> Is there something else I can help you with, ${visitorData.preferredName}?
+                <div class="max-w-xl mx-auto glass-card text-black p-4 rounded-2xl border border-gray-300 flex items-center justify-between gap-3 animate-fade-in shadow-xl">
+                    <div class="text-xs font-medium text-black flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-ping"></span> Is there something else I can help you with, ${visitorData.preferredName}?
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="handleAnythingElse('yes')" class="px-3.5 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 text-xs font-bold border border-blue-500/30 transition">Yes</button>
-                        <button onclick="handleAnythingElse('no')" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition">No</button>
+                        <button onclick="handleAnythingElse('yes')" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition">Yes</button>
+                        <button onclick="handleAnythingElse('no')" class="px-3.5 py-1.5 rounded-lg bg-[#e5e7eb] hover:bg-gray-300 text-black text-xs font-bold border border-gray-300 transition">No</button>
                     </div>
                 </div>
             `;
@@ -564,13 +602,13 @@ async function handleTransferDecision(choice) {
             msgDiv.className = `flex justify-start animate-fade-in mb-4`;
 
             msgDiv.innerHTML = `
-                <div class="max-w-2xl glass-card rounded-3xl rounded-tl-none shadow-2xl border-slate-700/60 p-6 sm:p-7 text-sm sm:text-base space-y-4">
-                    <div class="text-slate-200 leading-relaxed">
+                <div class="max-w-2xl glass-card text-black rounded-3xl rounded-tl-none shadow-2xl border-gray-300 p-6 sm:p-7 text-sm sm:text-base space-y-4">
+                    <div class="text-black leading-relaxed">
                         Regrettably, we were unable to locate a direct match for your specific inquiry within our core knowledge base. Would you like to request an engineer or ask something else?
                     </div>
-                    <div class="pt-2 border-t border-slate-700/50 flex items-center gap-3">
-                        <button onclick="startEngineerEscalationFlow()" class="px-5 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-xs font-bold border border-amber-500/30 transition shadow-md">Request Engineer</button>
-                        <button onclick="askIfFinished()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition shadow-md">Ask Something Else</button>
+                    <div class="pt-2 border-t border-gray-300 flex items-center gap-3">
+                        <button onclick="startEngineerEscalationFlow()" class="px-5 py-2.5 rounded-xl bg-[#e5e7eb] hover:bg-gray-300 text-black text-xs font-bold border border-gray-300 transition shadow-md">Request Engineer</button>
+                        <button onclick="askIfFinished()" class="px-5 py-2.5 rounded-xl bg-[#e5e7eb] hover:bg-gray-300 text-black text-xs font-bold border border-gray-300 transition shadow-md">Ask Something Else</button>
                     </div>
                 </div>
             `;
@@ -651,25 +689,25 @@ async function handleTransferDecision(choice) {
                 nodeList.forEach(node => {
                     const statusStr = (node.status || 'up').toLowerCase();
                     const isUp = statusStr === 'up' || statusStr === 'operational' || statusStr === 'online';
-                    const badgeColor = isUp ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-red-500/20 text-red-300 border-red-500/30';
-                    const dotColor = isUp ? 'bg-emerald-500' : 'bg-red-500 animate-ping';
+                    const badgeColor = isUp ? 'bg-emerald-500/20 text-emerald-900 border-emerald-500/30' : 'bg-red-500/20 text-red-900 border-red-500/30';
+                    const dotColor = isUp ? 'bg-emerald-600' : 'bg-red-600 animate-ping';
                     const latencyText = node.latency ? `${node.latency}` : (isUp ? '3ms' : 'Offline');
                     const nodeName = node.name || node.domain || node.service || 'Monitored Core Service';
-                    const nodeDomain = node.domain ? `<div class="text-[10px] text-slate-400 font-mono">${node.domain}</div>` : '';
+                    const nodeDomain = node.domain ? `<div class="text-[10px] text-black font-mono">${node.domain}</div>` : '';
                     
                     plainTextSummary += `- ${nodeName} (${node.domain || 'N/A'}): ${isUp ? 'Operational' : 'Down'} (${latencyText})\n`;
 
                     nodesListHtml += `
-                        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 border border-slate-700/60 text-xs shadow-inner">
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-[#e5e7eb] border border-gray-300 text-xs text-black shadow-inner">
                             <div class="flex items-center gap-3 truncate pr-2">
                                 <span class="w-2.5 h-2.5 rounded-full ${dotColor} flex-shrink-0"></span>
                                 <div class="truncate">
-                                    <div class="font-semibold text-slate-200 truncate">${nodeName}</div>
+                                    <div class="font-semibold text-black truncate">${nodeName}</div>
                                     ${nodeDomain}
                                 </div>
                             </div>
                             <div class="flex items-center gap-2.5 flex-shrink-0 font-mono">
-                                <span class="text-slate-400 text-[11px]">${latencyText}</span>
+                                <span class="text-black text-[11px]">${latencyText}</span>
                                 <span class="px-2.5 py-0.5 rounded-md border text-[10px] font-bold uppercase tracking-wider ${badgeColor}">${isUp ? 'Operational' : 'Down'}</span>
                             </div>
                         </div>
@@ -677,8 +715,8 @@ async function handleTransferDecision(choice) {
                 });
                 nodesListHtml += '</div>';
 
-                let liveStatusHtml = `Core services fetched live from <a href="https://status.techgrid-systems.org.uk" target="_blank" class="text-blue-400 underline font-semibold">status.techgrid-systems.org.uk</a>:<br>${nodesListHtml}`;
-                appendChatMessageHtml('bot', `${liveStatusHtml}<div class="mt-4 pt-3 border-t border-slate-700/50"><a href="https://status.techgrid-systems.org.uk" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 transition shadow-sm">🔗 Open Full Status Portal &rarr;</a></div>`, plainTextSummary);
+                let liveStatusHtml = `Core services fetched live from <a href="https://status.techgrid-systems.org.uk" target="_blank" class="text-black underline font-semibold">status.techgrid-systems.org.uk</a>:<br>${nodesListHtml}`;
+                appendChatMessageHtml('bot', `${liveStatusHtml}<div class="mt-4 pt-3 border-t border-gray-300"><a href="https://status.techgrid-systems.org.uk" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl bg-[#e5e7eb] hover:bg-gray-300 text-black border border-gray-300 transition shadow-sm">🔗 Open Full Status Portal &rarr;</a></div>`, plainTextSummary);
             } catch (err) {
                 const fallbackNodes = [
                     { name: 'Main Website', domain: 'www.techgrid-systems.org.uk', status: 'up', latency: '3ms' },
@@ -697,20 +735,20 @@ async function handleTransferDecision(choice) {
 
                 fallbackNodes.forEach(node => {
                     const isUp = node.status === 'up';
-                    const badgeColor = isUp ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-red-500/20 text-red-300 border-red-500/30';
-                    const dotColor = isUp ? 'bg-emerald-500' : 'bg-red-500 animate-ping';
+                    const badgeColor = isUp ? 'bg-emerald-500/20 text-emerald-900 border-emerald-500/30' : 'bg-red-500/20 text-red-900 border-red-500/30';
+                    const dotColor = isUp ? 'bg-emerald-600' : 'bg-red-600 animate-ping';
                     plainTextSummary += `- ${node.name} (${node.domain}): Operational (${node.latency})\n`;
                     nodesListHtml += `
-                        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 border border-slate-700/60 text-xs shadow-inner">
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-[#e5e7eb] border border-gray-300 text-xs text-black shadow-inner">
                             <div class="flex items-center gap-3 truncate pr-2">
                                 <span class="w-2.5 h-2.5 rounded-full ${dotColor} flex-shrink-0"></span>
                                 <div class="truncate">
-                                    <div class="font-semibold text-slate-200 truncate">${node.name}</div>
-                                    <div class="text-[10px] text-slate-400 font-mono">${node.domain}</div>
+                                    <div class="font-semibold text-black truncate">${node.name}</div>
+                                    <div class="text-[10px] text-black font-mono">${node.domain}</div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2.5 flex-shrink-0 font-mono">
-                                <span class="text-slate-400 text-[11px]">${node.latency}</span>
+                                <span class="text-black text-[11px]">${node.latency}</span>
                                 <span class="px-2.5 py-0.5 rounded-md border text-[10px] font-bold uppercase tracking-wider ${badgeColor}">${isUp ? 'Operational' : 'Down'}</span>
                             </div>
                         </div>
@@ -718,8 +756,8 @@ async function handleTransferDecision(choice) {
                 });
                 nodesListHtml += '</div>';
 
-                const fallbackHtml = `Core services fetched live from <a href="https://status.techgrid-systems.org.uk" target="_blank" class="text-blue-400 underline font-semibold">status.techgrid-systems.org.uk</a>:<br>${nodesListHtml}`;
-                appendChatMessageHtml('bot', `${fallbackHtml}<div class="mt-4 pt-3 border-t border-slate-700/50"><a href="https://status.techgrid-systems.org.uk" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 transition shadow-sm">🔗 Open Full Status Portal &rarr;</a></div>`, plainTextSummary);
+                const fallbackHtml = `Core services fetched live from <a href="https://status.techgrid-systems.org.uk" target="_blank" class="text-black underline font-semibold">status.techgrid-systems.org.uk</a>:<br>${nodesListHtml}`;
+                appendChatMessageHtml('bot', `${fallbackHtml}<div class="mt-4 pt-3 border-t border-gray-300"><a href="https://status.techgrid-systems.org.uk" target="_blank" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl bg-[#e5e7eb] hover:bg-gray-300 text-black border border-gray-300 transition shadow-sm">🔗 Open Full Status Portal &rarr;</a></div>`, plainTextSummary);
             }
         }
 
